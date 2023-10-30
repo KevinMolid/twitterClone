@@ -1,14 +1,10 @@
-/* Imports */
+// Imports
 
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 import { tweetsData } from './data.js'
 
 
-/* Variables */
-
-const tweetInput = document.getElementById('tweet-input')
-
-
-/* Event listeners */
+// Event listeners
 
 document.addEventListener('click', function(e){
     if(e.target.dataset.like){
@@ -26,7 +22,7 @@ document.addEventListener('click', function(e){
 })
 
 
-/* Functions */
+// Functions
 
 function handleReplyClick(tweetId){
     document.getElementById(`replies-${tweetId}`).classList.toggle('hidden')
@@ -62,8 +58,31 @@ function handleRetweetClick(tweetId){
     render() 
 }
 
+
 function handleTweetBtnClick(){
-    console.log(tweetInput.value)
+    const tweetInput = document.getElementById('tweet-input')
+
+    if(tweetInput.value){
+        // Make new tweet object
+        const newTweet = {
+            handle: `@KevinMolid 👑`,
+            profilePic: `images/Kevin.jpg`,
+            likes: 0,
+            retweets: 0,
+            tweetText: `${tweetInput.value}`,
+            replies: [],
+            isLiked: false,
+            isRetweeted: false,
+            uuid: uuidv4(),
+        }
+
+        // Add tweet object to array
+        tweetsData.unshift(newTweet)
+
+        // Clear input field
+        tweetInput.value = ''
+        render()
+    }
 }
 
 function getFeedHtml(){
@@ -145,7 +164,7 @@ function render(){
 }
 
 
-/* Run */
+// Run
 
 render()
 
