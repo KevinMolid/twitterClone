@@ -3,7 +3,6 @@
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 import { tweetsData } from './data.js'
 
-
 // Event listeners
 
 document.addEventListener('click', function(e){
@@ -26,6 +25,7 @@ document.addEventListener('click', function(e){
 
 function handleReplyClick(tweetId){
     document.getElementById(`replies-${tweetId}`).classList.toggle('hidden')
+    document.getElementById(`comment-${tweetId}`).classList.toggle('hidden')
 }
 
 function handleLikeClick(tweetId){ 
@@ -122,45 +122,69 @@ function getFeedHtml(){
         
           
         feedHtml += `
-<div class="tweet">
-    <div class="tweet-inner">
-        <img src="${tweet.profilePic}" class="profile-pic">
-        <div>
-            <p class="handle">${tweet.handle}</p>
-            <p class="tweet-text">${tweet.tweetText}</p>
-            <div class="tweet-details">
-                <span class="tweet-detail">
-                    <i class="fa-regular fa-comment-dots"
-                    data-reply="${tweet.uuid}"
-                    ></i>
-                    ${tweet.replies.length}
-                </span>
-                <span class="tweet-detail">
-                    <i class="fa-solid fa-heart ${likeIconClass}"
-                    data-like="${tweet.uuid}"
-                    ></i>
-                    ${tweet.likes}
-                </span>
-                <span class="tweet-detail">
-                    <i class="fa-solid fa-retweet ${retweetIconClass}"
-                    data-retweet="${tweet.uuid}"
-                    ></i>
-                    ${tweet.retweets}
-                </span>
-            </div>   
-        </div>            
-    </div>
-    <div class="hidden" id="replies-${tweet.uuid}">
-        ${repliesHTML}
-    </div> 
-</div>
-`
+            <div class="tweet">
+                <div class="tweet-inner">
+                    <img src="${tweet.profilePic}" class="profile-pic">
+                    <div>
+                        <p class="handle">${tweet.handle}</p>
+                        <p class="tweet-text">${tweet.tweetText}</p>
+                        <div class="tweet-details">
+                            <span class="tweet-detail">
+                                <i class="fa-regular fa-comment-dots"
+                                data-reply="${tweet.uuid}"
+                                ></i>
+                                ${tweet.replies.length}
+                            </span>
+                            <span class="tweet-detail">
+                                <i class="fa-solid fa-heart ${likeIconClass}"
+                                data-like="${tweet.uuid}"
+                                ></i>
+                                ${tweet.likes}
+                            </span>
+                            <span class="tweet-detail">
+                                <i class="fa-solid fa-retweet ${retweetIconClass}"
+                                data-retweet="${tweet.uuid}"
+                                ></i>
+                                ${tweet.retweets}
+                            </span>
+                        </div>   
+                    </div>            
+                </div>
+                <div class="hidden" id="replies-${tweet.uuid}">
+                    ${repliesHTML}
+                </div> 
+                <div class="hidden comment" id="comment-${tweet.uuid}">
+                    <textarea 
+                    class="comment-input"
+                        id="input-${tweet.uuid}"
+                        placeholder="Write a comment..."></textarea>
+                    <button 
+                        class="comment-btn"
+                        id="${tweet.uuid}-btn">Publish</button>
+                </div>
+            </div>
+            `
    })
    return feedHtml 
 }
 
 function render(){
     document.getElementById('feed').innerHTML = getFeedHtml()
+    for (let tweet of tweetsData){
+        const input = document.getElementById(`input-${tweet.uuid}`)
+        
+        document.getElementById(`${tweet.uuid}-btn`).addEventListener('click', function(){
+
+            tweet.replies.push(
+                {
+                    handle: `@KevinMolid 👑`,
+                    profilePic: `images/Kevin.jpg`,
+                    tweetText: input.value,
+                },
+            )
+            render()
+        })
+    }
 }
 
 
