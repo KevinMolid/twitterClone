@@ -175,14 +175,16 @@ function render(){
         
         document.getElementById(`${tweet.uuid}-btn`).addEventListener('click', function(){
 
-            tweet.replies.push(
-                {
-                    handle: `@KevinMolid 👑`,
-                    profilePic: `images/Kevin.jpg`,
-                    tweetText: input.value,
-                },
-            )
-            render()
+            if(input.value){
+                tweet.replies.push(
+                    {
+                        handle: `@KevinMolid 👑`,
+                        profilePic: `images/Kevin.jpg`,
+                        tweetText: input.value,
+                    },
+                )
+                render()
+            }
         })
     }
 }
